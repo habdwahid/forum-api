@@ -4,25 +4,25 @@ exports.up = (pgm) => {
   pgm.createTable('users', {
     id: {
       type: 'VARCHAR(50)',
-      primaryKey: true,
+      primaryKey: true
     },
     fullname: {
       type: 'TEXT',
-      notNull: true,
+      notNull: true
     },
     username: {
       type: 'VARCHAR(50)',
-      unique: true,
+      unique: true
     },
     password: {
       type: 'TEXT',
-      notNull: true,
+      notNull: true
     },
     created_at: 'TIMESTAMP',
-    updated_at: 'TIMESTAMP',
-  });
-};
+    updated_at: 'TIMESTAMP'
+  })
+}
 
 exports.down = (pgm) => {
-  pgm.dropTable('users');
-};
+  pgm.dropTable('users')
+}
