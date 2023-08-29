@@ -7,7 +7,8 @@ describe('InvariantError', () => {
     const invariantError = new InvariantError('some error')
 
     // Action and assert
-    expect(invariantError).toEqual('some error')
+    expect(invariantError.message).toEqual('some error')
+    expect(invariantError.name).toEqual('InvariantError')
     expect(invariantError).toBeInstanceOf(ClientError)
   })
 })
