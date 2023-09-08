@@ -7,7 +7,7 @@
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
     "test": "jest --setupFiles dotenv/config -i",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config"
+    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i"
   },
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
