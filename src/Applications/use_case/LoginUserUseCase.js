@@ -1,3 +1,4 @@
+const LoginUser = require('../../Domains/users/entities/LoginUser')
 const NewAuth = require('../../Domains/authentications/entities/NewAuth')
 
 class LoginUserUseCase {
@@ -9,7 +10,7 @@ class LoginUserUseCase {
   }
 
   async execute(useCasePayload) {
-    const {username, password} = useCasePayload
+    const {username, password} = new LoginUser(useCasePayload)
 
     // Get the user's encrypted password
     const encryptedPassword = await this._userRepository.getPasswordByUsername(username)
