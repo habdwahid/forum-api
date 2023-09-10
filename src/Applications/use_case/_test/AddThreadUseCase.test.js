@@ -6,15 +6,15 @@ const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 describe('AddThreadUseCase', () => {
   it('should orchestrating the add thread correctly', async () => {
     // Arrange
+    const userId = 'user-123'
     const useCasePayload = {
       title: 'Sebuah Thread',
-      body: 'Sebuah body thread',
-      owner: 'user-123'
+      body: 'Sebuah body thread'
     }
     const mockAddedThread = new AddedThread({
       id: 'thread-123',
       title: useCasePayload.title,
-      owner: useCasePayload.owner
+      owner: userId
     })
 
     /* creating dependency of the use case */
@@ -30,18 +30,18 @@ describe('AddThreadUseCase', () => {
     })
 
     // Action
-    const addedThread = await getThreadUseCase.execute(useCasePayload)
+    const addedThread = await getThreadUseCase.execute(useCasePayload, userId)
 
     // Assert
     expect(addedThread).toStrictEqual(new AddedThread({
       id: 'thread-123',
       title: useCasePayload.title,
-      owner: useCasePayload.owner
+      owner: userId
     }))
     expect(mockThreadRepository.addThread).toBeCalledWith(new AddThread({
       title: useCasePayload.title,
       body: useCasePayload.body,
-      owner: useCasePayload.owner
+      owner: userId
     }))
   })
 })
