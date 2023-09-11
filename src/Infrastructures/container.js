@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const {createContainer} = require('instances-container')
 const Jwt = require('@hapi/jwt')
 const {nanoid} = require('nanoid')
+const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase')
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
 const AuthRepository = require('../Domains/authentications/AuthRepository')
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres')
@@ -15,6 +16,8 @@ const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase')
 const PasswordHash = require('../Applications/security/PasswordHash')
 const pool = require('./database/postgres/pool')
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase')
+const ThreadRepository = require('../Domains/threads/ThreadRepository')
+const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 const UserRepository = require('../Domains/users/UserRepository')
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres')
 
@@ -37,6 +40,15 @@ container.register([
     Class: AuthenticationRepositoryPostgres,
     parameter: {
       dependencies: [{concrete: pool}]
+    }
+  },
+  {
+    key: ThreadRepository.name,
+    Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {concrete: pool}, {concrete: nanoid}
+      ]
     }
   },
   {
@@ -101,6 +113,16 @@ container.register([
       dependencies: [
         {name: 'authenticationRepository', internal: AuthRepository.name},
         {name: 'authenticationTokenManager', internal: AuthenticationTokenManager.name}
+      ]
+    }
+  },
+  {
+    key: AddThreadUseCase.name,
+    Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {name: 'threadRepository', internal: ThreadRepository.name}
       ]
     }
   }
