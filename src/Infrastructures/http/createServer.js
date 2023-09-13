@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 const Hapi = require('@hapi/hapi')
 const Jwt = require('@hapi/jwt')
 const authentications = require('../../Interfaces/http/api/authentications')
 const ClientError = require('../../Commons/exceptions/ClientError')
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator')
+const thread_comments = require('../../Interfaces/http/api/thread_comments')
 const threads = require('../../Interfaces/http/api/threads')
 const users = require('../../Interfaces/http/api/users')
 
@@ -45,6 +47,10 @@ const createServer = async (container) => {
     },
     {
       plugin: threads,
+      options: {container}
+    },
+    {
+      plugin: thread_comments,
       options: {container}
     }
   ])
