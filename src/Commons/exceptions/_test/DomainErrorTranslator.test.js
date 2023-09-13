@@ -38,5 +38,11 @@ describe('DomainErrorTranslator', () => {
       .toStrictEqual(new InvariantError('tidak dapat membuat thread baru karena tipe data tidak sesuai'))
     expect(DomainErrorTranslator.translate(new Error('ADD_THREAD.TITLE_LIMIT_CHAR')))
       .toStrictEqual(new InvariantError('tidak dapat membuat thread baru karena karakter title melebihi batas limit'))
+
+    // ADD_COMMENT
+    expect(DomainErrorTranslator.translate(new Error('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')))
+      .toStrictEqual(new InvariantError('tidak dapat membuat komentar baru karena properti yang dibutuhkan tidak ada'))
+    expect(DomainErrorTranslator.translate(new Error('ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')))
+      .toStrictEqual(new InvariantError('tidak dapat membuat komentar baru karena tipe data tidak sesuai'))
   })
 })
