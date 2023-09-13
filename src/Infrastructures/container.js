@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const {createContainer} = require('instances-container')
 const Jwt = require('@hapi/jwt')
 const {nanoid} = require('nanoid')
+const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase')
 const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase')
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
 const AuthRepository = require('../Domains/authentications/AuthRepository')
@@ -16,6 +17,8 @@ const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase')
 const PasswordHash = require('../Applications/security/PasswordHash')
 const pool = require('./database/postgres/pool')
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase')
+const ThreadCommentRepository = require('../Domains/thread_comments/ThreadCommentRepository')
+const ThreadCommentRepositoryPostgres = require('./repository/ThreadCommentRepositoryPostgres')
 const ThreadRepository = require('../Domains/threads/ThreadRepository')
 const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 const UserRepository = require('../Domains/users/UserRepository')
@@ -45,6 +48,15 @@ container.register([
   {
     key: ThreadRepository.name,
     Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {concrete: pool}, {concrete: nanoid}
+      ]
+    }
+  },
+  {
+    key: ThreadCommentRepository.name,
+    Class: ThreadCommentRepositoryPostgres,
     parameter: {
       dependencies: [
         {concrete: pool}, {concrete: nanoid}
@@ -123,6 +135,16 @@ container.register([
       injectType: 'destructuring',
       dependencies: [
         {name: 'threadRepository', internal: ThreadRepository.name}
+      ]
+    }
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {name: 'threadCommentRepository', internal: ThreadCommentRepository.name}
       ]
     }
   }
