@@ -18,9 +18,7 @@ class UserRepositoryPostgres extends UserRepository {
 
     const result = await this._pool.query(query)
 
-    if (result.rowCount) {
-      throw new InvariantError('username tidak tersedia')
-    }
+    if (result.rowCount) throw new InvariantError('username tidak tersedia')
   }
 
   async addUser({fullname, username, password}) {
