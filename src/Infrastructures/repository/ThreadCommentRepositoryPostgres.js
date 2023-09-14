@@ -53,12 +53,13 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
   /**
    * Find comment by id.
    *
+   * @param {string} threadId the thread id.
    * @param {string} commentId the comment id.
    */
-  async findCommentById(commentId) {
+  async findCommentById(threadId, commentId) {
     const query = {
-      text: 'SELECT id FROM thread_comments WHERE id = $1',
-      values: [commentId]
+      text: 'SELECT id FROM thread_comments WHERE thread = $1 AND id = $2',
+      values: [threadId, commentId]
     }
 
     const result = await this._pool.query(query)

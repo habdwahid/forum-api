@@ -11,6 +11,7 @@ const AuthRepository = require('../Domains/authentications/AuthRepository')
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres')
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager')
 const BcryptPasswordHash = require('./security/BcryptPasswordHash')
+const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseCase')
 const JwtTokenManager = require('./security/JwtTokenManager')
 const LoginUserUseCase = require('../Applications/use_case/LoginUserUseCase')
 const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase')
@@ -146,6 +147,16 @@ container.register([
       dependencies: [
         {name: 'threadCommentRepository', internal: ThreadCommentRepository.name},
         {name: 'threadRepository', internal: ThreadRepository.name}
+      ]
+    }
+  },
+  {
+    key: DeleteCommentUseCase.name,
+    Class: DeleteCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {name: 'threadCommentRepository', internal: ThreadCommentRepository.name}
       ]
     }
   }

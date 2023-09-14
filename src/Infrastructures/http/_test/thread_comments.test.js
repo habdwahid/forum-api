@@ -109,4 +109,34 @@ describe('/threads/{threadId}/comments', () => {
       expect(responseJson.message).toEqual('tidak dapat membuat komentar baru karena tipe data tidak sesuai')
     })
   })
+
+  describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
+    it('should response 200', async () => {
+      // Arrange
+      const jwtTokenManager = new JwtTokenManager(Jwt.token)
+      const accessToken = await jwtTokenManager.createAccessToken({username: 'dicoding', id: 'user-123'})
+      await AuthenticationsTableTestHelper.addToken(accessToken)
+
+      const threadId = 'thread-123'
+      await ThreadsTableTestHelper.addThread({id: threadId})
+
+      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123', owner: 'user-123', thread: threadId})
+      const server = await createServer(container)
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-123/comments/comment-123',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      // Assert
+      const responseJson = JSON.parse(response.payload)
+
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
+    })
+  })
 })

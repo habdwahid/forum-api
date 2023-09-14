@@ -85,20 +85,20 @@ describe('ThreadCommentRepositoryPostgres', () => {
   describe('findCommentById function', () => {
     it('should throw NotFoundError when id is not a valid comment id', async () => {
       // Arrange
-      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123'})
+      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123', thread: 'thread-123'})
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, {})
 
       // Action and assert
-      await expect(threadCommentRepositoryPostgres.findCommentById('comment-321')).rejects.toThrowError(NotFoundError)
+      await expect(threadCommentRepositoryPostgres.findCommentById('thread-321', 'comment-321')).rejects.toThrowError(NotFoundError)
     })
 
     it('should not throw NotFoundError when id is a valid comment id', async () => {
       // Arrange
-      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123'})
+      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123', thread: 'thread-123'})
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, {})
 
       // Action and assert
-      await expect(threadCommentRepositoryPostgres.findCommentById('comment-123')).resolves.not.toThrowError(NotFoundError)
+      await expect(threadCommentRepositoryPostgres.findCommentById('thread-123', 'comment-123')).resolves.not.toThrowError(NotFoundError)
     })
   })
 

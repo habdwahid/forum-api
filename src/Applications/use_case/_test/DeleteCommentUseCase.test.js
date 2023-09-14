@@ -5,6 +5,7 @@ describe('DeleteCommentUseCase', () => {
   it('should orchestrating the delete comment action', async () => {
     // Arrange
     const userId = 'user-123'
+    const threadId = 'thread-123'
     const commentId = 'comment-123'
 
     /* creating dependency of the use case */
@@ -24,10 +25,10 @@ describe('DeleteCommentUseCase', () => {
     })
 
     // Action
-    await getCommentUseCase.execute(userId, commentId)
+    await getCommentUseCase.execute(userId, threadId, commentId)
 
     // Assert
-    expect(mockThreadCommentRepository.findCommentById).toHaveBeenCalledWith(commentId)
+    expect(mockThreadCommentRepository.findCommentById).toHaveBeenCalledWith(threadId, commentId)
     expect(mockThreadCommentRepository.verifyCommentOwner).toHaveBeenCalledWith(userId, commentId)
     expect(mockThreadCommentRepository.deleteComment).toHaveBeenCalledWith(commentId)
   })
