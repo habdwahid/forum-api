@@ -34,6 +34,23 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
   }
 
   /**
+   * Get all comments by thread id.
+   *
+   * @param {string} threadId the thread id.
+   * @return {Array} result.
+   */
+  async getCommentsByThreadId(threadId) {
+    const query = {
+      text: 'SELECT c.id, u.username, c."createdAt" as date, content FROM thread_comments c JOIN users u ON u.id = c.owner WHERE c.thread = $1',
+      values: [threadId]
+    }
+
+    const result = await this._pool.query(query)
+
+    return result.rows
+  }
+
+  /**
    * Verify the owner of the comment.
    *
    * @param {string} userId the user id.
