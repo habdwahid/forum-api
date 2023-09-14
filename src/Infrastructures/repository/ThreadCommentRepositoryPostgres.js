@@ -90,11 +90,12 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
    * @param {string} commentId the comment id.
    */
   async deleteComment(commentId) {
+    const content = '**komentar telah dihapus**'
     const updatedAt = new Date().toISOString()
     const deletedAt = updatedAt
     const query = {
-      text: 'UPDATE thread_comments SET "updatedAt" = $2, "deletedAt" = $3 WHERE id = $1',
-      values: [commentId, updatedAt, deletedAt]
+      text: 'UPDATE thread_comments SET content = $2, "updatedAt" = $3, "deletedAt" = $4 WHERE id = $1',
+      values: [commentId, content, updatedAt, deletedAt]
     }
 
     await this._pool.query(query)
