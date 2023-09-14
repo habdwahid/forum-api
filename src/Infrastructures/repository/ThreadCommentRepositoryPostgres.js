@@ -1,4 +1,6 @@
 const AddedComment = require('../../Domains/thread_comments/entities/AddedComment')
+const AuthorizationError = require('../../Commons/exceptions/AuthorizationError')
+const NotFoundError = require('../../Commons/exceptions/NotFoundError')
 const ThreadCommentRepository = require('../../Domains/thread_comments/ThreadCommentRepository')
 
 class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
@@ -29,6 +31,55 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
     const result = await this._pool.query(query)
 
     return new AddedComment({...result.rows[0]})
+  }
+
+  /**
+   * Verify the owner of the comment.
+   *
+   * @param {string} userId the user id.
+   * @param {string} commentId the comment id.
+   */
+  async verifyCommentOwner(userId, commentId) {
+    const query = {
+      text: 'SELECT * FROM thread_comments WHERE owner = $1 AND id = $2',
+      values: [userId, commentId]
+    }
+
+    const result = await this._pool.query(query)
+
+    if (!result.rowCount) throw new AuthorizationError('tidak dapat melanjutkan permintaan Anda karena Anda bukan pemilik komentar')
+  }
+
+  /**
+   * Find comment by id.
+   *
+   * @param {string} commentId the comment id.
+   */
+  async findCommentById(commentId) {
+    const query = {
+      text: 'SELECT id FROM thread_comments WHERE id = $1',
+      values: [commentId]
+    }
+
+    const result = await this._pool.query(query)
+
+    if (!result.rowCount) throw new NotFoundError('komentar tidak ditemukan, id tidak valid')
+  }
+
+  /**
+   * Remove the comment by id.
+   *
+   * @param {string} commentId the comment id.
+   */
+  async deleteComment(commentId) {
+    const updatedAt = new Date().toISOString()
+    const deletedAt = updatedAt
+    const query = {
+      text: 'UPDATE thread_comments SET "updatedAt" = $2, "deletedAt" = $3 WHERE id = $1',
+      values: [commentId, updatedAt, deletedAt]
+    }
+
+    await this._pool.query(query)
   }
 }
 
