@@ -137,7 +137,7 @@ describe('/threads url', () => {
   describe('when GET /threads/{threadId}', () => {
     it('should response 200 and persisted thread', async () => {
       // Arrange
-      await ThreadsTableTestHelper.addThread({id: 'thread-123'})
+      await ThreadsTableTestHelper.addThread({id: 'thread-123', title: 'Sebuah Thread', body: 'Sebuah body thread', owner: 'user-123'})
       const server = await createServer(container)
 
       // Action
@@ -169,7 +169,7 @@ describe('/threads url', () => {
 
       expect(response.statusCode).toEqual(404)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('thread tidak ditemukan')
+      expect(responseJson.message).toEqual('thread tidak ditemukan, id tidak valid')
     })
   })
 })

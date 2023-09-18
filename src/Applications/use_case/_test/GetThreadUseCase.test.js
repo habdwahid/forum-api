@@ -8,7 +8,7 @@ describe('GetThreadUseCase', () => {
     const threadId = 'thread-123'
     const date = new Date().toISOString()
     const mockThread = {
-      id: 'thread-123',
+      id: threadId,
       title: 'Sebuah thread',
       body: 'Sebuah body thread',
       date: date,
@@ -31,10 +31,10 @@ describe('GetThreadUseCase', () => {
     /* mocking needed function */
     mockThreadRepository.findThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve())
-    mockThreadCommentRepository.getCommentsByThreadId = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockComments))
     mockThreadRepository.getThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve(mockThread))
+    mockThreadCommentRepository.getCommentsByThreadId = jest.fn()
+      .mockImplementation(() => Promise.resolve(mockComments))
 
     /* create the use case instance */
     const getThreadUseCase = new GetThreadUseCase({
@@ -47,8 +47,8 @@ describe('GetThreadUseCase', () => {
 
     // Assert
     expect(mockThreadRepository.findThreadById).toBeCalledWith(threadId)
-    expect(mockThreadCommentRepository.getCommentsByThreadId).toBeCalledWith(threadId)
     expect(mockThreadRepository.getThreadById).toBeCalledWith(threadId)
+    expect(mockThreadCommentRepository.getCommentsByThreadId).toBeCalledWith(threadId)
     expect(thread).toEqual(mockThreadWithComments)
   })
 })

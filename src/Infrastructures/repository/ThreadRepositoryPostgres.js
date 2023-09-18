@@ -34,8 +34,6 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     const result = await this._pool.query(query)
 
-    if (!result.rowCount) throw new NotFoundError('thread tidak ditemukan, id tidak valid')
-
     return result.rows[0]
   }
 
@@ -47,7 +45,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     const result = await this._pool.query(query)
 
-    if (!result.rowCount) throw new NotFoundError('thread tidak ditemukan')
+    if (!result.rowCount) throw new NotFoundError('thread tidak ditemukan, id tidak valid')
   }
 }
 

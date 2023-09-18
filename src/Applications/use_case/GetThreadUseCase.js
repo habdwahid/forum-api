@@ -5,12 +5,11 @@ class GetThreadUseCase {
   }
 
   async execute(threadId) {
-    // Validating thread by id
     await this._threadRepository.findThreadById(threadId)
 
-    const comments = await this._threadCommentRepository.getCommentsByThreadId(threadId)
-
     const thread = await this._threadRepository.getThreadById(threadId)
+
+    const comments = await this._threadCommentRepository.getCommentsByThreadId(threadId)
 
     return {...thread, comments: comments}
   }
