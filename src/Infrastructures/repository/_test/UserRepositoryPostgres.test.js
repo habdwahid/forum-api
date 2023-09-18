@@ -73,4 +73,50 @@ describe('UserRepositoryPostgres', () => {
       }))
     })
   })
+
+  describe('getPasswordByUsername function', () => {
+    it('should throw InvariantError when username is invalid', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {})
+
+      // Action and assert
+      await expect(userRepositoryPostgres.getPasswordByUsername('dicoding')).rejects.toThrowError(InvariantError)
+    })
+
+    it('should return password correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({username: 'dicoding', password: 'super_secret'})
+
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {})
+
+      // Action
+      const password = await userRepositoryPostgres.getPasswordByUsername('dicoding')
+
+      // Assert
+      expect(password).toBe('super_secret')
+    })
+  })
+
+  describe('getIdByUsername function', () => {
+    it('should throw InvariantError when username is invalid', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {})
+
+      // Action and assert
+      await expect(userRepositoryPostgres.getIdByUsername('dicoding')).rejects.toThrowError(InvariantError)
+    })
+
+    it('should return id correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({id: 'user-123', username: 'dicoding'})
+
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {})
+
+      // Action
+      const id = await userRepositoryPostgres.getIdByUsername('dicoding')
+
+      // Assert
+      expect(id).toBe('user-123')
+    })
+  })
 })
