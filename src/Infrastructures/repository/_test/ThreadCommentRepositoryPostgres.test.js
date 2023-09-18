@@ -5,10 +5,12 @@ const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
 const pool = require('../../database/postgres/pool')
 const ThreadCommentRepositoryPostgres = require('../ThreadCommentRepositoryPostgres')
 const ThreadCommentsTableTestHelper = require('../../../../tests/ThreadCommentsTableTestHelper')
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 
 describe('ThreadCommentRepositoryPostgres', () => {
   afterEach(async () => {
     await ThreadCommentsTableTestHelper.cleanTable()
+    await UsersTableTestHelper.cleanTable()
   })
 
   afterAll(async () => {
@@ -79,6 +81,35 @@ describe('ThreadCommentRepositoryPostgres', () => {
       // Action and assert
       await expect(threadCommentRepositoryPostgres.verifyCommentOwner(userId, commentId))
         .resolves.not.toThrowError(AuthorizationError)
+    })
+  })
+
+  describe('getCommentsByThreadId function', () => {
+    it('should return comments correctly', async () => {
+      // Arrange
+      const addComment = {
+        id: 'comment-123',
+        content: 'Sebuah comment',
+        owner: 'user-123',
+        thread: 'thread-123'
+      }
+      await ThreadCommentsTableTestHelper.addComment(addComment)
+      await UsersTableTestHelper.addUser({id: 'user-123', username: 'dicoding'})
+
+      const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, {})
+
+      // Action
+      const comment = await threadCommentRepositoryPostgres.getCommentsByThreadId('thread-123')
+
+      // Assert
+      expect(comment).toStrictEqual([
+        {
+          id: addComment.id,
+          username: 'dicoding',
+          date: comment[0].date,
+          content: addComment.content
+        }
+      ])
     })
   })
 

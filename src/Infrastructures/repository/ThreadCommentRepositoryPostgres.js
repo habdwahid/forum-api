@@ -41,13 +41,20 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
    */
   async getCommentsByThreadId(threadId) {
     const query = {
-      text: 'SELECT c.id, u.username, c."createdAt" as date, content FROM thread_comments c JOIN users u ON u.id = c.owner WHERE c.thread = $1 ORDER BY date ASC',
+      text: 'SELECT c.id, u.username, c."createdAt" as date, c.content, c."deletedAt" FROM thread_comments c JOIN users u ON u.id = c.owner WHERE c.thread = $1 ORDER BY date ASC',
       values: [threadId]
     }
 
     const result = await this._pool.query(query)
 
-    return result.rows
+    const comments = result.rows
+
+    return comments.map((comment) => ({
+      id: comment.id,
+      username: comment.username,
+      date: comment.date,
+      content: comment.deletedAt === null ? comment.content : '**komentar telah dihapus**'
+    }))
   }
 
   /**
@@ -90,12 +97,11 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
    * @param {string} commentId the comment id.
    */
   async deleteComment(commentId) {
-    const content = '**komentar telah dihapus**'
     const updatedAt = new Date().toISOString()
     const deletedAt = updatedAt
     const query = {
-      text: 'UPDATE thread_comments SET content = $2, "updatedAt" = $3, "deletedAt" = $4 WHERE id = $1',
-      values: [commentId, content, updatedAt, deletedAt]
+      text: 'UPDATE thread_comments SET "updatedAt" = $2, "deletedAt" = $3 WHERE id = $1',
+      values: [commentId, updatedAt, deletedAt]
     }
 
     await this._pool.query(query)
