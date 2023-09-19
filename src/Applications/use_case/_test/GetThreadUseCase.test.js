@@ -14,15 +14,15 @@ describe('GetThreadUseCase', () => {
       date: date,
       username: 'dicoding'
     }
-    const mockComments = [
+    const expectedComments = [
       {
         id: 'comment-123',
         username: 'dicoding',
         date: date,
-        content: 'Sebuah comment'
+        content: '**komentar telah dihapus**'
       }
     ]
-    const mockThreadWithComments = {...mockThread, comments: mockComments}
+    const expectedThread = {...mockThread, comments: expectedComments}
 
     /* creating dependency of the use case */
     const mockThreadCommentRepository = new ThreadCommentRepository()
@@ -34,7 +34,15 @@ describe('GetThreadUseCase', () => {
     mockThreadRepository.getThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve(mockThread))
     mockThreadCommentRepository.getCommentsByThreadId = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockComments))
+      .mockImplementation(() => Promise.resolve([
+        {
+          id: 'comment-123',
+          username: 'dicoding',
+          date: date,
+          content: 'Sebuah comment',
+          deletedAt: date
+        }
+      ]))
 
     /* create the use case instance */
     const getThreadUseCase = new GetThreadUseCase({
@@ -49,6 +57,6 @@ describe('GetThreadUseCase', () => {
     expect(mockThreadRepository.findThreadById).toBeCalledWith(threadId)
     expect(mockThreadRepository.getThreadById).toBeCalledWith(threadId)
     expect(mockThreadCommentRepository.getCommentsByThreadId).toBeCalledWith(threadId)
-    expect(thread).toEqual(mockThreadWithComments)
+    expect(thread).toEqual(expectedThread)
   })
 })
