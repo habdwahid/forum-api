@@ -107,7 +107,8 @@ describe('ThreadCommentRepositoryPostgres', () => {
           id: addComment.id,
           username: 'dicoding',
           date: comment[0].date,
-          content: addComment.content
+          content: addComment.content,
+          deletedAt: null
         }
       ])
     })
@@ -136,16 +137,18 @@ describe('ThreadCommentRepositoryPostgres', () => {
   describe('deleteComment function', () => {
     it('should soft delete comment correctly', async () => {
       // Arrange
-      await ThreadCommentsTableTestHelper.addComment({id: 'comment-123'})
+      const commentId = 'comment-123'
+      await ThreadCommentsTableTestHelper.addComment({id: commentId})
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, {})
 
       // Action
-      await threadCommentRepositoryPostgres.deleteComment('comment-123')
+      await threadCommentRepositoryPostgres.deleteComment(commentId)
 
       // Assert
-      const comment = await ThreadCommentsTableTestHelper.findComment('comment-123')
+      const comment = await ThreadCommentsTableTestHelper.findComment(commentId)
 
       expect(comment).toHaveLength(1)
+      expect(comment.deletedAt).not.toEqual(null)
     })
   })
 })

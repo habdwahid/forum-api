@@ -47,14 +47,7 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
 
     const result = await this._pool.query(query)
 
-    const comments = result.rows
-
-    return comments.map((comment) => ({
-      id: comment.id,
-      username: comment.username,
-      date: comment.date,
-      content: comment.deletedAt === null ? comment.content : '**komentar telah dihapus**'
-    }))
+    return result.rows
   }
 
   /**
