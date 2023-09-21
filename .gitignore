@@ -11,5 +11,8 @@
 #.pnp.*
 
 .env
+.yarn
 coverage
+forum-api-server.pem
 node_modules
+yarn.lock
