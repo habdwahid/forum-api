@@ -27,18 +27,18 @@ jobs:
         env:
           CI: true
           
-          ACCESS_TOKEN_KEY: ${{ secret.ACCESS_TOKEN_KEY }}
-          REFRESH_TOKEN_KEY: ${{ secret.REFRESH_TOKEN_KEY }}
-          TOKEN_AGE: ${{ secret.TOKEN_AGE }}
+          ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
+          TOKEN_AGE: ${{ secrets.TOKEN_AGE }}
 
-          PGHOST: ${{ secret.PGHOST }}
-          PGPORT: ${{ secret.PGPORT }}
-          PGUSER: ${{ secret.PGUSER }}
-          PGPASSWORD: ${{ secret.PGPASSWORD }}
-          PGDATABASE: ${{ secret.PGDATABASE }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
 
-          PGHOST_TEST: ${{ secret.PGHOST_TEST }}
-          PGPORT_TEST: ${{ secret.PGPORT_TEST }}
-          PGUSER_TEST: ${{ secret.PGUSER_TEST }}
-          PGPASSWORD_TEST: ${{ secret.PGPASSWORD_TEST }}
-          PGDATABASE_TEST: ${{ secret.PGDATABASE_TEST }}
+          PGHOST_TEST: ${{ secrets.PGHOST_TEST }}
+          PGPORT_TEST: ${{ secrets.PGPORT_TEST }}
+          PGUSER_TEST: ${{ secrets.PGUSER_TEST }}
+          PGPASSWORD_TEST: ${{ secrets.PGPASSWORD_TEST }}
+          PGDATABASE_TEST: ${{ secrets.PGDATABASE_TEST }}
