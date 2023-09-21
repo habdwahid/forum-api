@@ -1,6 +1,5 @@
 {
   "name": "forum-api",
-  "packageManager": "yarn@3.6.1",
   "scripts": {
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json",
